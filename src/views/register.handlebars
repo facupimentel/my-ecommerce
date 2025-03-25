@@ -1,0 +1,48 @@
+<main>
+  <section
+    style="display: flex; justify-content: center; align-items: center; height: 80vh; color: white;"
+  >
+    <div
+      style="display: flex; justify-content: center; flex-direction: column; background-color:#1c365e; width: 80%; height: 80%; border-radius: 5px; align-items: center;"
+    >
+      <h1 style="margin-bottom: 60px;">Registro de Usuario</h1>
+      <form
+        action=""
+        style="display: flex; flex-direction: column; gap:20px; width:60%;"
+      >
+        <input
+          type="name"
+          name="name"
+          id="name"
+          placeholder="Nombre de Usuario"
+        />
+        <input type="mail" name="mail" id="mail" placeholder="Mail" />
+        <input
+          type="password"
+          name="password"
+          id="password"
+          placeholder="Contraseña"
+        />
+        <input
+          type="phone"
+          name="phone"
+          id="phone"
+          placeholder="Telefono de Contacto"
+        />
+        <button
+          id="register"
+          type="button"
+          value="REGISTER!"
+        >Registrarse</button>
+        <h2 style="font-size:small;">¿ya tenes cuenta?
+          <a
+            href="/login"
+            style="color: white; text-decoration:none;"
+            onmouseover="this.style.color='yellow'; this.style.textDecoration='none';"
+            onmouseout="this.style.color='white'; this.style.textDecoration='none';"
+          >Inicia Sesion</a></h2>
+      </form>
+    </div>
+  </section>
+
+</main>

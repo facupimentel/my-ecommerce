@@ -1,0 +1,32 @@
+<main>
+  <section
+    style="display: flex; justify-content: center; align-items: center; height: 80vh;"
+  >
+    <div
+      style="display: flex; justify-content: center; flex-direction: column; background-color:#1c365e;color: white; width: 80%; height: 80%; border-radius: 5px; align-items: center;"
+    >
+      <h1 style="margin-bottom: 60px;">Inicio de Sesion</h1>
+      <form
+        action=""
+        style="display: flex; flex-direction: column; gap:20px; width:60%;"
+      >
+        <input type="mail" name="mail" id="mail" placeholder="Mail" />
+        <input
+          type="password"
+          name="password"
+          id="password"
+          placeholder="Contraseña"
+        />
+        <button type="button" id="login">Inicia Sesion</button>
+        <h2 style="font-size:small;">¿no tenes cuenta?
+          <a
+            href="/register"
+            style="color: white; text-decoration:none;"
+            onmouseover="this.style.color='yellow'; this.style.textDecoration='none';"
+            onmouseout="this.style.color='white'; this.style.textDecoration='none';"
+          >Registrate</a>
+        </h2>
+      </form>
+    </div>
+  </section>
+</main>
