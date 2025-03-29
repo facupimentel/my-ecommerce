@@ -14,7 +14,16 @@ class Manager {
 
   readAll = async (filter) => {
     try {
-      const all = await this.model.find(filter);
+      const all = await this.model.find(filter)
+      return all;
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  readMongo = async () => {
+    try {
+      const all = await this.model.find().lean()
       return all;
     } catch (error) {
       throw error;
@@ -23,7 +32,7 @@ class Manager {
 
   readBy = async (data) => {
     try {
-      const one = await this.model.findOne(data);
+      const one = await this.model.findOne(data).lean();
       return one;
     } catch (error) {
       throw error;
