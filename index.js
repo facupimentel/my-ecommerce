@@ -9,6 +9,8 @@ import errorHandler from "./src/middlewares/errorHandler.mid.js"
 import __dirname from "./utils.js"
 import morgan from "morgan"
 import cookieParser from "cookie-parser"
+import sessionFileStore from "session-file-store"
+import MongoStore from "connect-mongo"
 
 const server = express()
 const port = process.env.PORT
@@ -28,17 +30,17 @@ server.set("views", __dirname + "/src/views")
 //  middlewares
 server.use(morgan("dev"))
 server.use(express.static("public"))
-server.use(express.urlencoded({extended: true}))
 server.use(express.json())
+server.use(express.urlencoded({extended: true}))
 server.use(cookieParser(process.env.COOKIE_KEY))
 server.use(
-    session({
-        secret: process.env.SESSION_KEY,
-        resave: true,
-        saveUninitialized: true,
-        cookie: {maxAge: 7*24*60*60*1000}
-    })
-)
+  session({
+    secret: process.env.SESSION_KEY,
+    resave: true,
+    saveUninitialized: true,
+    store: new MongoStore({ttl: 7*24*60*60, mongoUrl: process.env.MONGO})
+  })
+);
 
 
 // router

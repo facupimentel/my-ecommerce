@@ -14,16 +14,7 @@ class Manager {
 
   readAll = async (filter) => {
     try {
-      const all = await this.model.find(filter)
-      return all;
-    } catch (error) {
-      throw error;
-    }
-  };
-
-  readMongo = async () => {
-    try {
-      const all = await this.model.find().lean()
+      const all = await this.model.find(filter).lean()
       return all;
     } catch (error) {
       throw error;
@@ -50,7 +41,7 @@ class Manager {
 
   updateById = async (id, data) => {
     try {
-        const one = await this.model.findByIdAndUpdate(id, data);
+        const one = await this.model.findByIdAndUpdate(id, data, {new:true});
         return one;
     } catch (error) {
       throw error;
