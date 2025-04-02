@@ -3,6 +3,7 @@ import passport from "../../middlewares/passport.mid.js";
 
 const authRouter = Router();
 
+// esto va en controllers //
 const register = async (req, res, next) => {
   try {
     const response = req.user;
@@ -20,7 +21,9 @@ const login = async (req, res, next) => {
   try {
     // traemos los datos del formulario de sign in
     const response = req.user;
+    const token = req.token
     res.status(200).json({
+      token,
       response,
       method: req.method,
       url: req.url,
@@ -71,6 +74,20 @@ const badAuth = async (req, res, next) => {
   }
 };
 
+const google = async (req, res, next) => {
+  try {
+    const response = req.user;
+    res.status(200).json({
+      response,
+      method: req.method,
+      url: req.url,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+// esto va en controllers //
+
 authRouter.post(
   "/register",
   passport.authenticate("register", {
@@ -90,5 +107,20 @@ authRouter.post(
 authRouter.post("/online", online);
 authRouter.post("/signout", signout);
 authRouter.get("/bad-auth", badAuth);
+// ruta para pantalla de conocimiento (google), y accede al objeto profile de google con los datos del usuario
+authRouter.get(
+  "/google",
+  passport.authenticate("google", { scope: ["email", "profile"], failureRedirect: "/api/auth/bad-auth"})
+);
+// segunda logica para acceder a la estrategia con los datos del profile del usuario
+
+authRouter.get(
+  "/google/callback",
+  passport.authenticate("google", {
+    session: false,
+    failureRedirect: "/api/auth/bad-auth",
+  }),
+  google
+);
 
 export default authRouter;
