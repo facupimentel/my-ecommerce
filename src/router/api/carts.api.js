@@ -1,4 +1,4 @@
-import { Router } from "express";
+import CustomRouter from "../custom.router.js";
 import {
   addProductToCart,
   readProductByUser,
@@ -6,11 +6,19 @@ import {
   removeProductByCart,
 } from "../../controllers/carts.controller.js"
 
-const cartsRouter = Router();
+class CartsRouter extends CustomRouter {
+  constructor() {
+    super();
+    this.init();
+  }
+  init = () => {
+    this.create("/", addProductToCart);
+    this.read("/users/:user_id", readProductByUser);
+    this.update("/:cart_id", updateQuantity);
+    this.destroy("/:cart_id", removeProductByCart);
+  };
+}
 
-cartsRouter.post("/", addProductToCart);
-cartsRouter.get("/users/:user_id", readProductByUser);
-cartsRouter.put("/:cart_id", updateQuantity);
-cartsRouter.delete("/:cart_id", removeProductByCart);
 
-export default cartsRouter;
+const cartsRouter = new CartsRouter()
+export default cartsRouter.getRouter()
