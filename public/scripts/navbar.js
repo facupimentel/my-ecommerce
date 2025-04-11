@@ -9,11 +9,11 @@ const isOnline = async () => {
     response = await response.json();
     console.log(response);
     const selector = document.querySelector("#opts");
-    if (response.user_id) {
+    if (response.token) {
       // reonderizar opociones correctas + signout
       selector.innerHTML = `
-      <a class="btn btn-success py-1 px-2 m-1" href="/carts/:${response.user_id}"> Cart</a>
-      <a class="btn btn-success py-1 px-2 m-1" href="/profile/${response.user_id}"> Profile</a>
+      <a class="btn btn-success py-1 px-2 m-1" href="/carts/:${response.token}"> Cart</a>
+      <a class="btn btn-success py-1 px-2 m-1" href="/profile/${response.token}"> Profile</a>
       <button class="btn btn-success py-1 px-2 m-1" id="signout">Sign Out</button>
     `;
       document.querySelector("#signout").addEventListener("click", async () => {

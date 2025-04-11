@@ -50,16 +50,10 @@ viewsRouter.get("/login", async (req, res) => {
   }
 });
 
-viewsRouter.get("/profile/:uid", async (req, res) => {
+viewsRouter.get("/profile", async (req, res) => {
   try {
-    const {uid} = req.params
-    const one = await usersManager.readById(uid)
-    if(!one){
-      res.status(200).render("signin")
-    }
     const data = {
       title: "Perfil",
-      users: one,
     };
     res.status(200).render("profile", data);
   } catch (error) {

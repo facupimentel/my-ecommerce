@@ -16,6 +16,7 @@ document.querySelector("#login").addEventListener("click", async () => {
     if (response.error) {
       alert(response.error);
     } else {
+      localStorage.setItem("token", response.token)
       location.replace("/");
     }
   } catch (error) {

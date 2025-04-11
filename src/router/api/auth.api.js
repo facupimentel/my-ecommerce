@@ -1,5 +1,6 @@
 import { Router } from "express";
 import passport from "../../middlewares/passport.mid.js";
+import passportCb from "../../middlewares/passportCb.mid.js";
 
 const authRouter = Router();
 
@@ -21,9 +22,9 @@ const login = async (req, res, next) => {
   try {
     // traemos los datos del formulario de sign in
     const response = req.user;
-    const token = req.token
-    res.status(200).json({
-      token,
+    const token = req.token;
+    const opts = { maxAge: 7 * 24 * 60 * 60, httpOnly: true };
+    res.cookie("token", token, opts).status(200).json({
       response,
       method: req.method,
       url: req.url,
@@ -35,9 +36,9 @@ const login = async (req, res, next) => {
 
 const online = async (req, res, next) => {
   try {
-    if (req.session.user_id) {
+    if (req.user._id) {
       res.status(200).json({
-        user_id: req.session.user_id,
+        response: req.user._id,
         method: req.method,
         url: req.url,
       });
@@ -53,8 +54,7 @@ const online = async (req, res, next) => {
 
 const signout = async (req, res, next) => {
   try {
-    req.session.destroy();
-    res.status(200).json({
+    res.clearCookie("token").status(200).json({
       message: "signed out",
       method: req.method,
       url: req.url,
@@ -86,31 +86,61 @@ const google = async (req, res, next) => {
     next(error);
   }
 };
+
+const profile = async (req, res, next) => {
+  try {
+    res.status(200).json({
+      response: {
+        name: req.user.name,
+        email: req.user.email,
+        avatar: req.user.avatar,
+        role: req.user.role,
+      },
+      method: req.method,
+      url: req.url,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 // esto va en controllers //
 
 authRouter.post(
   "/register",
-  passport.authenticate("register", {
-    session: false,
-    failureRedirect: "/api/auth/bad-auth",
-  }),
+passportCb("register"),
   register
 );
+
 authRouter.post(
   "/login",
-  passport.authenticate("login", {
+ passportCb("login"),
+  login
+);
+
+authRouter.post(
+  "/online",
+  passportCb("current"),
+  online
+);
+
+authRouter.post(
+  "/signout",
+  passport.authenticate("current", {
     session: false,
     failureRedirect: "/api/auth/bad-auth",
   }),
-  login
+  signout
 );
-authRouter.post("/online", online);
-authRouter.post("/signout", signout);
+
 authRouter.get("/bad-auth", badAuth);
 // ruta para pantalla de conocimiento (google), y accede al objeto profile de google con los datos del usuario
 authRouter.get(
   "/google",
-  passport.authenticate("google", { scope: ["email", "profile"], failureRedirect: "/api/auth/bad-auth"})
+  passport.authenticate("google", {
+    scope: ["email", "profile"],
+    failureRedirect: "/api/auth/bad-auth",
+  })
 );
 // segunda logica para acceder a la estrategia con los datos del profile del usuario
 
@@ -122,5 +152,6 @@ authRouter.get(
   }),
   google
 );
+authRouter.get("/profile", profile);
 
 export default authRouter;

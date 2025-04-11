@@ -1,18 +1,27 @@
-import { Router } from "express";
-import {readOneProduct,
+import CustomRouter from "../custom.router.js";
+import {
+  readOneProduct,
   readProducts,
   createProduct,
   updateProducts,
-  destroyProduct,} from "../../controllers/products.controller.js"
-import isAdmin from "../../middlewares/isAdmin.mid.js";
+  destroyProduct,
+} from "../../controllers/products.controller.js";
+import passportCb from "../../middlewares/passportCb.mid.js";
 
-const productsRouter = Router()
+class ProductsRouter extends CustomRouter{
+  constructor(){
+    super()
+    this.init()
+  }
+  init = ()=>{
+    this.create("/", passportCb("admin"), createProduct);
+    this.read("/", readProducts);
+    this.read("/:pid", readOneProduct);
+    this.update("/:pid", passportCb("admin"), updateProducts);
+    this.destroy("/:pid", passportCb("admin"), destroyProduct);
+    // this.router.param("pid", pidParam)
+  }
+}
 
-productsRouter.get("/", readProducts);
-productsRouter.post("/", isAdmin, createProduct);
-productsRouter.get("/:pid", readOneProduct);
-productsRouter.put("/:pid", updateProducts);
-productsRouter.delete("/:pid", destroyProduct);
-
-
-export default productsRouter
+const productsRouter = new ProductsRouter()
+export default productsRouter.getRouter();

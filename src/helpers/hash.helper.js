@@ -18,7 +18,6 @@ function createHash(password){
  * recibe contraseña cruda (la del formulario) y la contraseña de la base de datos las va a comprarar y devuelve el booleano correspondiente
  */
 function verifyHash(password, mongoPassword){
-    console.log({password, mongoPassword}); 
     const verify = compareSync(password, mongoPassword)
     return verify
 }
