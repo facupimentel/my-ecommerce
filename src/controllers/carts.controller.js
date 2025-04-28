@@ -5,11 +5,7 @@ const addProductToCart = async (req, res, next) =>{
         const {user_id, product_id, quantity} = req.body
         const one = await cartsManager.addProductToCart(user_id, product_id, quantity)
         if(one){
-            res.status(201).json({
-                method: req.method,
-                url: req.url,
-                response: one
-            })
+            res.json201(one)
         }
     } catch (error) {
         next(error)
@@ -21,15 +17,9 @@ const readProductByUser = async (req, res, next) =>{
         const {user_id} = req.params
         const all = await cartsManager.readProductByUser(user_id)
         if(all.length > 0){
-            return res.status(200).json({
-                method: req.method,
-                url: req.url,
-                response: all
-            })
+            res.json200(all)
         }
-        const error = new Error("not found")
-        error.status = 404
-        throw error
+        res.json404(all)
     } catch (error) {
         next(error)
     }
@@ -41,15 +31,9 @@ const updateQuantity = async (req, res, next) =>{
         const {quantity} = req.body
         const one = await cartsManager.updateQuantity(cart_id, quantity)
         if(one){
-            return res.status(200).json({
-                method: req.method,
-                url: url.req,
-                response: one
-            })
+            res.json200(one)
         }
-        const error = new Error("not found")
-        error.status = 404
-        throw error
+        res.json404(one)
     } catch (error) {
         next(error)
     }
@@ -60,15 +44,9 @@ const removeProductByCart = async (req, res, next) =>{
         const {cart_id} = req.params
         const one = await cartsManager.removeProductByCart(cart_id)
         if(one){
-            return res.status(200).json({
-                method: req.method,
-                url: url.req,
-                response: one
-            })
+            res.json200(one)
         }
-        const error = new Error("not found")
-        error.status = 404
-        throw error
+        res.json404(one)
     } catch (error) {
         next(error)
     }

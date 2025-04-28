@@ -5,6 +5,7 @@ import {
   createProduct,
   updateProducts,
   destroyProduct,
+  pidParam,
 } from "../../controllers/products.controller.js";
 import passportCb from "../../middlewares/passportCb.mid.js";
 
@@ -14,12 +15,12 @@ class ProductsRouter extends CustomRouter{
     this.init()
   }
   init = ()=>{
-    this.create("/", passportCb("admin"), createProduct);
-    this.read("/", readProducts);
-    this.read("/:pid", readOneProduct);
-    this.update("/:pid", passportCb("admin"), updateProducts);
-    this.destroy("/:pid", passportCb("admin"), destroyProduct);
-    // this.router.param("pid", pidParam)
+    this.create("/",["ADMIN"], createProduct);
+    this.read("/", ["USER"],readProducts);
+    this.read("/:pid", ["USER"], readOneProduct);
+    this.update("/:pid", ["ADMIN"], updateProducts);
+    this.destroy("/:pid", ["ADMIN"],  destroyProduct);
+    this.router.param("pid", pidParam)
   }
 }
 
