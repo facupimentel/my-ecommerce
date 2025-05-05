@@ -1,25 +1,26 @@
-import { verifyToken } from "../helpers/token.helper.js";
+import {verifyToken} from "../helpers/token.helper.js"
 
 const setupPolicies = (policies) => async (req, res, next) => {
-    try {
-        if(policies.includes("Public")) return next()
-            const token = req?.cookies?.token
-        const data = verifyToken(token)
-        const {role, user_id} = data
-        if(!role || !user_id) return res.json401()
-        const roles = {
-          USER: policies.includes("USER"),
-          ADMIN: policies.includes("ADMIN"),
-        };
-        if(roles[role]){
-            req.user = data
-            return next()
-        }else {
-            res.json(403)
-        }
-    } catch (error) {
-        res.json500(error, message)
+  try {
+    if (policies.includes("public")) return next();
+    const token = req?.cookies?.token;
+    if (!token) return res.json401("Token no proporcionado");
+    const data = verifyToken(token);
+    const { role, user_id } = data;
+    if (!role || !user_id) return res.json401();
+    const roles = {
+      user: policies.includes("user"),
+      admin: policies.includes("admin"),
+    };
+    if(roles[role]){
+        req.user = data
+        return next()
+    } else {
+        res.json403()
     }
+  } catch (error) {
+    next()
+  }
 };
 
 export default setupPolicies

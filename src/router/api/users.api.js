@@ -8,11 +8,11 @@ class UsersRouter extends CustomRouter{
     this.init()
   }
   init = ()=>{
-    this.create("/", passportCb("admin"), createUser);
-    this.read("/", readUsers);
-    this.read("/:uid", readOneUser);
-    this.update("/:uid", passportCb("admin"), updateUser);
-    this.destroy("/:uid", passportCb("admin"), destroyUser);
+    this.create("/", ["admin"], createUser);
+    this.read("/", ["user"], readUsers);
+    this.read("/:uid", ["user"],readOneUser);
+    this.update("/:uid", ["admin"], updateUser);
+    this.destroy("/:uid", ["admin"], destroyUser);
     // this.router.param("uid", uidParam)
   }
 }

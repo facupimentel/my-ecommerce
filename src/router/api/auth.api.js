@@ -1,58 +1,64 @@
-import { Router } from "express";
 import passport from "../../middlewares/passport.mid.js";
 import passportCb from "../../middlewares/passportCb.mid.js";
-import {register, login, online, signout, badAuth, google, profile} from "../../controllers/auth.controller.js"
+import {
+  register,
+  login,
+  online,
+  signout,
+  badAuth,
+  google,
+  profile,
+} from "../../controllers/auth.controller.js";
+import CustomRouter from "../custom.router.js";
 
-const authRouter = Router();
+class AuthRouter extends CustomRouter {
+  constructor() {
+    super();
+    this.init();
+  }
+  init = () => {
+    this.create("/register", ["public"], passportCb("register"), register);
 
+    this.create("/login", ["public"], passportCb("login"), login);
 
+    this.create("/online", ["public", "admin"], passportCb("current"), online);
 
-authRouter.post(
-  "/register",
-passportCb("register"),
-  register
-);
+    this.create(
+      "/signout",
+      ["public"]
+      ,
+      passport.authenticate("current", {
+        session: false,
+        failureRedirect: "/api/auth/bad-auth",
+      }),
+      signout
+    );
 
-authRouter.post(
-  "/login",
- passportCb("login"),
-  login
-);
+    this.read("/bad-auth", ["public"],badAuth);
+    // ruta para pantalla de conocimiento (google), y accede al objeto profile de google con los datos del usuario
+    this.read(
+      "/google",
+      ["public"],
+      passport.authenticate("google", {
+        scope: ["email", "profile"],
+        failureRedirect: "/api/auth/bad-auth",
+      })
+    );
+    // segunda logica para acceder a la estrategia con los datos del profile del usuario
 
-authRouter.post(
-  "/online",
-  passportCb("current"),
-  online
-);
+    this.read(
+      "/google/callback",
+      ["public", "admin"]
+      ,
+      passport.authenticate("google", {
+        session: false,
+        failureRedirect: "/api/auth/bad-auth",
+      }),
+      google
+    );
+    this.read("/profile", profile);
+  };
+}
 
-authRouter.post(
-  "/signout",
-  passport.authenticate("current", {
-    session: false,
-    failureRedirect: "/api/auth/bad-auth",
-  }),
-  signout
-);
-
-authRouter.get("/bad-auth", badAuth);
-// ruta para pantalla de conocimiento (google), y accede al objeto profile de google con los datos del usuario
-authRouter.get(
-  "/google",
-  passport.authenticate("google", {
-    scope: ["email", "profile"],
-    failureRedirect: "/api/auth/bad-auth",
-  })
-);
-// segunda logica para acceder a la estrategia con los datos del profile del usuario
-
-authRouter.get(
-  "/google/callback",
-  passport.authenticate("google", {
-    session: false,
-    failureRedirect: "/api/auth/bad-auth",
-  }),
-  google
-);
-authRouter.get("/profile", profile);
-
-export default authRouter;
+const authRouter = new AuthRouter();
+export default authRouter.getRouter();

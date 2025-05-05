@@ -1,6 +1,7 @@
 import express from "express"
 import { engine } from "express-handlebars"
 import "dotenv/config.js"
+import "./src/helpers/setEnv.helper.js"
 import session from "express-session"
 import connectMongo from "./src/helpers/dbConnect.helper.js"
 import router from "./src/router/index.router.js"
@@ -11,11 +12,14 @@ import morgan from "morgan"
 import cookieParser from "cookie-parser"
 import sessionFileStore from "session-file-store"
 import MongoStore from "connect-mongo"
+import args from "./src/helpers/setArgs.helper.js"
 
 const server = express()
 const port = process.env.PORT
 const ready =()=>{
     console.log("server ready on port", port);
+        console.log("server ready on mode", args.mode);
+
     connectMongo()
 }
 server.listen(port, ready)

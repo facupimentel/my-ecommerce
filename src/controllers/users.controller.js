@@ -1,15 +1,15 @@
 // import usersManager from "../data/fs/users.fs.js";
 import usersManager from "../data/mongo/users.mongo.js";
-import setupResponses from "../middlewares/setupResponse.mid.js";
+import setupResponses from "../middlewares/setupResponses.mid.js";
 
 const readUsers = async (req, res, next) => {
   try {
     const { data } = req.body;
-    const one = await usersManager.read(data);
+    const one = await usersManager.readAll(data);
     if (one.length > 0) {
       res.json200(one)
     }
-    res.json404(one)
+    res.json404(ne)
   } catch (error) {
     next(error);
   }

@@ -15,11 +15,11 @@ class ProductsRouter extends CustomRouter{
     this.init()
   }
   init = ()=>{
-    this.create("/",["ADMIN"], createProduct);
-    this.read("/", ["USER"],readProducts);
-    this.read("/:pid", ["USER"], readOneProduct);
-    this.update("/:pid", ["ADMIN"], updateProducts);
-    this.destroy("/:pid", ["ADMIN"],  destroyProduct);
+    this.create("/",["admin"], createProduct);
+    this.read("/", ["public"], readProducts);
+    this.read("/:pid", ["public"], readOneProduct);
+    this.update("/:pid", ["admin"], updateProducts);
+    this.destroy("/:pid", ["admin"],  destroyProduct);
     this.router.param("pid", pidParam)
   }
 }

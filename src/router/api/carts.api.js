@@ -12,10 +12,10 @@ class CartsRouter extends CustomRouter {
     this.init();
   }
   init = () => {
-    this.create("/", addProductToCart);
-    this.read("/users/:user_id", readProductByUser);
-    this.update("/:cart_id", updateQuantity);
-    this.destroy("/:cart_id", removeProductByCart);
+    this.create("/", ["user"],addProductToCart);
+    this.read("/users/:user_id", ["user"],readProductByUser);
+    this.update("/:cart_id", ["user"],updateQuantity);
+    this.destroy("/:cart_id", ["user"],removeProductByCart);
   };
 }
 
